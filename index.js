@@ -11,8 +11,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());  
 
-
-
 mongoose.set("strictQuery", false);
 mongoose.connect("mongodb://127.0.0.1:27017/Billingnew")
   .then(() => console.log("You! Connected to MongoDB..."))
