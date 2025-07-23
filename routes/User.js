@@ -1,6 +1,6 @@
 import express from 'express';
 import { Auth, protect } from '../Authendication/auth.js';
-import { createAdmin, createOwner, deleteUser, getUsers, loginUser, toggleUserStatus, updateUserDetails,  } from '../controller/User.js';
+import { createAdmin, createOwner, deleteUser, getUserById, getUsers, loginUser, toggleUserStatus, updateUserDetails,  } from '../controller/User.js';
 
 const router = express.Router();
 
@@ -11,6 +11,7 @@ router.get('/getallusers', Auth,protect, getUsers);
 router.put('/updateuser/:id',Auth,protect,updateUserDetails);
 router.patch('/toggle-status/:id', Auth,protect, toggleUserStatus);
 router.delete('/delete/:id', Auth,protect, deleteUser);
+router.get('/getusersbyid/:id', Auth, getUserById);
 
 export default router;
  

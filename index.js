@@ -3,11 +3,14 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/User.js'
 import billRoutes from './routes/Bill.js'
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());  
+
 
 
 mongoose.set("strictQuery", false);

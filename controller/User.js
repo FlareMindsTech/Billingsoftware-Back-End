@@ -134,30 +134,37 @@ export const getUsers = async (req, res) => {
 
 
 
-export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  export const loginUser = async (req, res) => {
+    const { email, password } = req.body;
 
-  if (!email || !password)
-    return res.status(400).json({ message: 'Email and password are required' });
+    if (!email || !password)
+      return res.status(400).json({ message: 'Email and password are required' });
 
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    try {
+      const user = await User.findOne({ email });
+      if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT, { expiresIn: '1d' });
+      const token = jwt.sign({ id: user._id }, process.env.JWT, { expiresIn: '1d' });
 
-    res.status(200).json({
-      message: 'Login successful',
-      token,
-    });
-  } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+      res.status(200).json({
+        message: 'Login successful',
+        token,
+        user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      },
+      });
+    } catch (err) {
+      console.error('Login error:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
 
 
 // Update User Status
@@ -212,6 +219,29 @@ export const toggleUserStatus = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+export const getUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // validate id length (optional)
+    if (!userId || userId.length < 24) {
+      return res.status(400).json({ error: 'Invalid user ID' });
+    }
+
+    const user = await User.findById(userId).select('-password'); // don't return pwd
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error: ' + err.message });
+  }
+};
+
 
 
 
