@@ -11,13 +11,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());  
 
-mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://127.0.0.1:27017/Billingnew")
-  .then(() => console.log("You! Connected to MongoDB..."))
-  .catch((err) =>
-    console.error("Could not connect to MongoDB... " + err.message)
-  );
- 
+// mongoose.set("strictQuery", false);
+// mongoose.connect("mongodb://127.0.0.1:27017/Billingnew")
+//   .then(() => console.log("You! Connected to MongoDB..."))
+//   .catch((err) =>
+//     console.error("Could not connect to MongoDB... " + err.message)
+//   );
+ mongoose.connect('mongodb+srv://flaremindstech:flareminds%401308@cluster0.12wutsc.mongodb.net/Billingnew?retryWrites=true&w=majority&appName=Cluster0')
+.then(() => console.log('Connected to MongoDB Atlas...'))
+.catch(err => console.error('Could not connect to MongoDB...'));
 
 // Routes
 app.use('/api/users', userRoutes);
