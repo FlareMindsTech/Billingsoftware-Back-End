@@ -73,17 +73,20 @@ export const getAllBills = async (req, res) => {
     }
 
     if (name) {
-      query.customerName = new RegExp(name, 'i'); // Partial match
+      query.customerName = new RegExp(name, 'i');
     }
 
     if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // include entire endDate
+
       query.createdAt = {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate)
+        $gte: start,
+        $lte: end
       };
     }
 
-    // Optional: if logged-in user is admin
     if (req.user.role === 'Admin') {
       query.createdBy = req.user._id;
     }
@@ -94,6 +97,7 @@ export const getAllBills = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 export const getUserById = async (req, res) => {
